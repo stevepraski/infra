@@ -1,0 +1,36 @@
+---
+- name: Detect OS and include dependent variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+
+- name: Users
+  include_tasks: users.yml
+  vars:
+    user_name: "{{ item.user_name }}"
+    user_shell_path: "{{ item.user_shell_path }}"
+    user_keys: "{{ item.user_keys }}"
+    user_nopass_sudo: "{{ item.user_nopass_sudo }}"
+  with_list: "{{ users }}"
+
+# adapted from geerlingguy.security
+# NOTE: KbdInteractiveAuthentication replaces ChallengeResponseAuthentication
+- name: Update SSHD configuration
+  lineinfile:
+    dest: "{{ sshd_config_path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -T -f %s'
+    mode: 0644
+  with_items:
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^KbdInteractiveAuthentication"
+      line: "KbdInteractiveAuthentication no"
+  notify: restart sshd
