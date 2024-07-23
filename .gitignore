@@ -48,3 +48,6 @@ terraform.rc
 ### Vagrant ###
 *.vagrant
 Vagrantfile
+
+### Temporary (until I vault them) ###
+group_vars

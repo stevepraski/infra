@@ -1,0 +1,11 @@
+---
+- hosts: nas
+  become: true
+
+  tasks:
+  - name: Security
+    include_role:
+      name: security
+  - name: Data
+    include_role:
+      name: data

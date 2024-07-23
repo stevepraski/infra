@@ -1,0 +1,36 @@
+---
+- name: Detect OS
+  set_fact:
+    detected_os: "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+    zfs_packages:
+      debian-12:
+        - zfs-modules
+        - zfsutils-linux
+      ubuntu-22:
+        - zfsutils-linux
+
+- name: Debian stable backports repository
+  when: detected_os == "debian-12"
+  apt_repository:
+    repo: deb https://deb.debian.org/debian bookworm-backports main contrib
+    state: present
+    update_cache: yes
+
+- name: ZFS package
+  package:
+    name: "{{ zfs_packages[detected_os] }}"
+    default_release:  "{{ (detected_os == 'debian-12') | ternary('stable-backports', omit) }}"
+    state: present
+
+- name: yt-dlp PPA
+  when: detected_os == "ubuntu-22"
+  apt_repository:
+    repo: ppa:tomtomtom/yt-dlp
+    state: present
+    update_cache: yes
+
+- name: yt-dlp package
+  package:
+    name: yt-dlp
+    default_release:  "{{ (detected_os == 'debian-12') | ternary('stable-backports', omit) }}"
+    state: latest
