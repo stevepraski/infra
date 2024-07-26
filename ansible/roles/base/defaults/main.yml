@@ -1,0 +1,8 @@
+base_utility_packages:
+  - tmux
+  - htop
+
+make_swap: false
+swap_file_path: "/swap"
+swap_file_swappiness: 60
+swap_mem_percentage: 50

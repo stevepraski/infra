@@ -1,0 +1,9 @@
+---
+- name: Manage swap
+  include_tasks: swap.yml
+  when: make_swap | bool
+
+- name: Utility packages
+  package:
+    name: "{{ base_utility_packages }}"
+    state: present

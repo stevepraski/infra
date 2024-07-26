@@ -1,0 +1,51 @@
+---
+- name: Check for swap file
+  stat:
+    path: "{{ swap_file_path}}"
+  register: swap_file
+
+- name: Calculate swap file size
+  set_fact:
+    swap_file_size: "{{ ansible_memory_mb.real.total * swap_mem_percentage|int // 100 }}"
+  when: not swap_file.stat.exists
+
+- name: Set swap file allocation cmd
+  set_fact:
+    swap_file_allocation_cmd: "fallocate -x -l {{ swap_file_size }}MB {{ swap_file_path}}" #FIXME: make OS dependent (use 'dd' as fallback)
+  when: not swap_file.stat.exists
+
+- name: Allocate space for swap file
+  command: "{{ swap_file_allocation_cmd }}"
+  when: not swap_file.stat.exists
+  register: swap_file_allocation
+
+- name: Swap file permissions
+  file:
+    path: "{{ swap_file_path }}"
+    mode: 0600
+
+- name: Make file into a swap file
+  command: mkswap {{ swap_file_path }}
+  when: swap_file_allocation is changed
+  register: mkswap_result
+
+- name: Mountable configuration for swap file
+  mount:
+    src: "{{ swap_file_path }}"
+    name: "none"
+    fstype: "swap"
+    opts: "sw,nofail"
+    dump: "0"
+    passno: "0"
+    state: present
+  when: not swap_file.stat.exists
+
+- name: Enable swap file
+  command: swapon {{ swap_file_path }}
+  when: mkswap_result is changed
+
+- name: Swap file swappiness
+  sysctl:
+    name: vm.swappiness
+    value: "{{ swap_file_swappiness }}"
+    state: present
