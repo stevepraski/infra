@@ -29,6 +29,7 @@
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     mode: '0400'
+  when: user_keys is defined
 
 - name: Passwordless sudoers for "{{ output_user_name }}"
   lineinfile:

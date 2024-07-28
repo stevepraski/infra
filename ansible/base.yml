@@ -1,5 +1,5 @@
 ---
-- hosts: nas
+- hosts: all
   become: true
 
   tasks:
@@ -9,6 +9,3 @@
   - name: Base
     include_role:
       name: base
-  - name: Data
-    include_role:
-      name: data
