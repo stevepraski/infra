@@ -12,3 +12,6 @@
   - name: Data
     include_role:
       name: data
+  - name: Nginx
+    include_role:
+      name: geerlingguy.nginx
