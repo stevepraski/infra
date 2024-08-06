@@ -1,3 +1,4 @@
 base_utility_packages:
   - tmux
   - htop
+  - rsync

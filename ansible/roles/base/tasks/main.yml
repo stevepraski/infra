@@ -2,4 +2,4 @@
 - name: Utility packages
   package:
     name: "{{ base_utility_packages }}"
-    state: present
+    state: latest

@@ -1,2 +1,5 @@
 [nas]
 pawn zfs_pool_mount=pawnee
+
+[misc]
+slate
