@@ -34,3 +34,8 @@
     name: yt-dlp
     default_release:  "{{ (detected_os == 'debian-12') | ternary('stable-backports', omit) }}"
     state: latest
+
+- name: git package
+  package:
+    name: git
+    state: latest
