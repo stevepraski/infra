@@ -1,0 +1,39 @@
+---
+- name: Install apt cache service (apt-cacher-ng)
+  package:
+    name: apt-cacher-ng
+    state: latest
+
+- name: Get state of apt cache directory ({{ apt_cacher_ng_dir }})
+  ansible.builtin.stat:
+    path: "{{ apt_cacher_ng_dir }}"
+  register: apt_cache_dir
+
+- name: Create apt cache directory ({{ apt_cacher_ng_dir }})
+  file:
+    path: "{{ apt_cacher_ng_dir }}"
+    state: directory
+    owner: apt-cacher-ng
+    group: apt-cacher-ng
+    mode: '2755' # outout of ``stat -c "%a %n"`` against default directory
+  when: apt_cache_dir.stat.isdir is not defined or not apt_cache_dir.stat.isdir | bool
+
+- name: Update apt cache service configuration (acng.conf)
+  lineinfile:
+    dest: /etc/apt-cacher-ng/acng.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^Port:"
+      line: "Port: {{ apt_cacher_ng_port }}"
+    - regexp: "^CacheDir:"
+      line: "CacheDir: {{ apt_cacher_ng_dir }}"
+  notify:
+    - restart apt-cacher-ng
+
+- name: Check apt that cache service is running (apt-cacher-ng)
+  service:
+    name: apt-cacher-ng
+    state: started
+    enabled: yes
