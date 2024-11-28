@@ -29,6 +29,8 @@
       line: "Port: {{ apt_cacher_ng_port }}"
     - regexp: "^CacheDir:"
       line: "CacheDir: {{ apt_cacher_ng_dir }}"
+    - regexp: "^PassThroughPattern:"
+      line: 'PassThroughPattern: steampowered\.com:443$'
   notify:
     - restart apt-cacher-ng
 

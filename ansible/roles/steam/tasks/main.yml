@@ -1,0 +1,36 @@
+---
+  - name: Detect OS
+    set_fact:
+      detected_os: "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+
+  - name: Steam repository authentication key
+    ansible.builtin.get_url:
+      url: https://repo.steampowered.com/steam/archive/stable/steam.gpg
+      dest: /usr/share/keyrings/steam.gpg
+      mode: '0644'
+    when: detected_os == "debian-12"
+
+# FIXME: make idempotent
+  - name: Enable i386 architecture
+    command: dpkg --add-architecture i386
+    when:
+      - ansible_architecture == "x86_64"
+      - detected_os == "debian-12"
+
+  - name: Add Steam to apt sources
+    ansible.builtin.apt_repository:
+      repo: "deb [arch=amd64,i386 signed-by=/usr/share/keyrings/steam.gpg] https://repo.steampowered.com/steam/ stable steam"
+      state: present
+      filename: steam-stable
+    when: detected_os == "debian-12"
+
+  - name: Steam and dependencies
+    ansible.builtin.package:
+      name:
+        - libgl1-mesa-dri:amd64
+        - libgl1-mesa-dri:i386
+        - libgl1-mesa-glx:amd64
+        - libgl1-mesa-glx:i386
+        - steam-installer
+      state: present
+    when: detected_os == "debian-12"

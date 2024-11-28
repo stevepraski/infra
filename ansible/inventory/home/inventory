@@ -1,5 +1,5 @@
 [nas]
 pawn zfs_pool_mount=pawnee apt_cacher_ng_dir=/pawnee/apt-cacher-ng
 
-[misc]
-slate
+[laptop]
+slated

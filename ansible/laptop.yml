@@ -1,0 +1,28 @@
+---
+- hosts: laptop
+  become: true
+
+  tasks:
+  - name: Security
+    include_role:
+      name: security
+
+  - name: Base
+    include_role:
+      name: base
+
+  - name: Firefox ESR
+    package:
+      name: firefox-esr
+      state: latest
+
+  - name: Essential desktop packages
+    ansible.builtin.package:
+      name:
+        - firefox-esr
+        - keepassxc
+      state: latest
+
+  - name: Steam installer
+    include_role:
+      name: steam
