@@ -10,11 +10,13 @@
         - zfsutils-linux
 
 - name: Debian stable backports repository
-  when: detected_os == "debian-12"
   apt_repository:
-    repo: deb https://deb.debian.org/debian bookworm-backports main contrib
+    repo: deb http://deb.debian.org/debian bookworm-backports main contrib
     state: present
     update_cache: yes
+    filename: bookworm-backports
+
+  when: detected_os == "debian-12"
 
 - name: ZFS package
   package:
@@ -23,11 +25,11 @@
     state: present
 
 - name: yt-dlp PPA
-  when: detected_os == "ubuntu-22"
   apt_repository:
     repo: ppa:tomtomtom/yt-dlp
     state: present
     update_cache: yes
+  when: detected_os == "ubuntu-22"
 
 - name: yt-dlp package
   package:

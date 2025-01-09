@@ -1,0 +1,15 @@
+---
+- name: Desktop packages
+  ansible.builtin.package:
+    name: "{{ desktop_packages }}"
+    state: latest
+
+- name: Desktop packages for development
+  ansible.builtin.package:
+    name: "{{ desktop_dev_packages }}"
+    state: latest
+  when: include_desktop_dev_packages
+
+- name: Google Chrome
+  include_tasks: chrome.yml
+  when: include_chrome

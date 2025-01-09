@@ -11,18 +11,16 @@
     include_role:
       name: base
 
-  - name: Firefox ESR
-    package:
-      name: firefox-esr
-      state: latest
-
-  - name: Essential desktop packages
-    ansible.builtin.package:
-      name:
-        - firefox-esr
-        - keepassxc
-      state: latest
+  - name: Desktop
+    include_role:
+      name: desktop
 
   - name: Steam installer
     include_role:
       name: steam
+    when: include_steam | default(false) | bool
+
+  - name: Data role
+    include_role:
+      name: data
+    when: include_data_role | default(false) | bool

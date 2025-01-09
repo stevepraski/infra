@@ -1,0 +1,26 @@
+---
+- name: Google repo signing key
+  ansible.builtin.get_url:
+    url: "https://dl.google.com/linux/linux_signing_key.pub"
+    dest: /etc/apt/trusted.gpg.d/google.asc
+    mode: '0644'
+    force: true
+
+- name: Chrome repository source
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+    state: present
+    update_cache: yes
+    filename: google-chrome
+
+- name: Google Chrome stable package
+  ansible.builtin.package:
+    name: google-chrome-stable
+    state: latest
+
+- name: Remove the https line that chrome helpfully added
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+    state: absent
+    update_cache: no
+    filename: google-chrome
