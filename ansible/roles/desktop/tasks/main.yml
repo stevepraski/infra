@@ -1,15 +1,34 @@
----
 - name: Desktop packages
   ansible.builtin.package:
     name: "{{ desktop_packages }}"
+    update_cache: yes
     state: latest
 
 - name: Desktop packages for development
   ansible.builtin.package:
     name: "{{ desktop_dev_packages }}"
-    state: latest
+    state: present
   when: include_desktop_dev_packages
 
 - name: Google Chrome
   include_tasks: chrome.yml
   when: include_chrome
+
+- name: KVM packages
+  ansible.builtin.package:
+    name:
+      - qemu-system
+      - libvirt-daemon-system
+    state: present
+  when:
+    - include_kvm
+    - include_desktop_dev_packages
+
+- name: Add user "{{ dev_user }}" to libvirt group
+  user:
+    name: "{{ dev_user }}"
+    groups: libvirt
+    append: true
+  when:
+    - dev_user is defined
+    - include_desktop_dev_packages

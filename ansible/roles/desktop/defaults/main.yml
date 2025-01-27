@@ -2,4 +2,5 @@
 desktop_packages: []
 desktop_dev_packages: []
 include_desktop_dev_packages: false
+include_kvm: false
 include_chrome: false

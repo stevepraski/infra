@@ -49,5 +49,6 @@ terraform.rc
 *.vagrant
 Vagrantfile
 
-### Temporary (until I vault them) ###
+### Temporary (until I vault them, and/or make a submodule) ###
 group_vars
+inventory
