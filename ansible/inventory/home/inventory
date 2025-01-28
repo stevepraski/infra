@@ -1,6 +1,0 @@
-[nas]
-pawn zfs_pool_mount=pawnee apt_cacher_ng_dir=/pawnee/apt-cacher-ng
-
-[laptop]
-slated include_steam=true include_data_role=false
-frosted include_chrome=true include_desktop_dev_packages=true
