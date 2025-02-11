@@ -6,6 +6,7 @@
       debian-12:
         - zfs-modules
         - zfsutils-linux
+        - zfs-initramfs
       ubuntu-22:
         - zfsutils-linux
 
@@ -15,13 +16,11 @@
     state: present
     update_cache: yes
     filename: bookworm-backports
-
   when: detected_os == "debian-12"
 
 - name: ZFS package
   package:
     name: "{{ zfs_packages[detected_os] }}"
-    default_release:  "{{ (detected_os == 'debian-12') | ternary('stable-backports', omit) }}"
     state: present
 
 - name: yt-dlp PPA
