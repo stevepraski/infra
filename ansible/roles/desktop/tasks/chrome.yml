@@ -7,20 +7,16 @@
     force: true
 
 - name: Chrome repository source
-  ansible.builtin.apt_repository:
-    repo: deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
-    state: present
-    update_cache: yes
-    filename: google-chrome
+  ansible.builtin.deb822_repository:
+    name: google-chrome
+    types: deb
+    uris: http://dl.google.com/linux/chrome/deb/
+    suites: stable
+    components: main
+    signed_by: /etc/apt/trusted.gpg.d/google-chrome.gpg
 
 - name: Google Chrome stable package
   ansible.builtin.package:
     name: google-chrome-stable
+    update_cache: yes
     state: latest
-
-- name: Remove the https line that chrome helpfully added
-  ansible.builtin.apt_repository:
-    repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
-    state: absent
-    update_cache: no
-    filename: google-chrome

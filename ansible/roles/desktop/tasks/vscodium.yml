@@ -1,0 +1,15 @@
+---
+- name: VSCodium repository source
+  ansible.builtin.deb822_repository:
+    name: vscodium
+    types: deb
+    uris: http://download.vscodium.com/debs
+    suites: vscodium
+    components: main
+    signed_by: https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
+
+- name: VSCodium stable package
+  ansible.builtin.package:
+    name: codium
+    update_cache: yes
+    state: latest

@@ -14,6 +14,10 @@
   include_tasks: chrome.yml
   when: include_chrome
 
+- name: VSCodium
+  include_tasks: vscodium.yml
+  when: include_desktop_dev_packages
+
 - name: KVM packages
   ansible.builtin.package:
     name:
