@@ -25,8 +25,7 @@
       - libvirt-daemon-system
     state: present
   when:
-    - include_kvm
-    - include_desktop_dev_packages
+    - hypervisor == "kvm"
 
 - name: Add user "{{ dev_user }}" to libvirt group
   user:
@@ -34,5 +33,28 @@
     groups: libvirt
     append: true
   when:
+    - hypervisor == "kvm"
     - dev_user is defined
-    - include_desktop_dev_packages
+
+- name: VirtualBox repository source
+  ansible.builtin.deb822_repository:
+    name: virtualbox
+    types: deb
+    uris: http://download.virtualbox.org/virtualbox/debian
+    suites: "{{ ansible_distribution_release }}"
+    components: contrib
+    signed_by: https://www.virtualbox.org/download/oracle_vbox_2016.asc
+  when:
+    - hypervisor == "virtualbox"
+    - ansible_distribution | lower == "debian"
+    - ansible_distribution_major_version == "12"
+
+- name: VirtualBox package
+  ansible.builtin.package:
+    name: "{{ virtualbox_package_name }}"
+    update_cache: yes
+    state: latest
+  when:
+    - hypervisor == "virtualbox"
+    - ansible_distribution | lower == "debian"
+    - ansible_distribution_major_version == "12"
