@@ -15,3 +15,6 @@
   - name: Nginx
     include_role:
       name: geerlingguy.nginx
+  - name: apt-cache
+    include_role:
+      name: apt_cache
