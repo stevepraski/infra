@@ -3,6 +3,11 @@
   set_fact:
     output_user_name: "{{ user_name }}"
 
+# Ugly string construction inside ternary saves some output spam
+- name: Determine user home directory for "{{ output_user_name }}"
+  set_fact:
+    user_home_dir: "{{ (ansible_user_home_dir is defined and user_name == ansible_user) | ternary(ansible_user_home_dir,'/home/'+user_name) }}"
+
 - name: User group for "{{ output_user_name }}"
   group:
     name: "{{ user_name }}"
@@ -13,10 +18,11 @@
     uid: "{{ user_uid | default(omit) }}"
     group: "{{ user_name }}"
     shell: "{{ user_shell_path | default(omit) }}"
+    home: "{{ user_home_dir }}"
 
 - name: User .ssh directory for "{{ output_user_name }}"
   file:
-    path: "/home/{{ user_name }}/.ssh/"
+    path: "{{ user_home_dir }}/.ssh/"
     state: directory
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
@@ -25,7 +31,7 @@
 - name: User authorized SSH public keys for "{{ output_user_name }}"
   template:
     src: authorized_keys.j2
-    dest: "/home/{{ user_name }}/.ssh/authorized_keys"
+    dest: "{{ user_home_dir }}/.ssh/authorized_keys"
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     mode: '0400'
