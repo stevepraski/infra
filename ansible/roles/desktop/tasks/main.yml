@@ -16,7 +16,9 @@
 
 - name: VSCodium
   include_tasks: vscodium.yml
-  when: include_desktop_dev_packages
+  when:
+    - include_desktop_dev_packages
+    - include_vscodium
 
 - name: KVM packages
   ansible.builtin.package:

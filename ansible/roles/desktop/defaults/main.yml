@@ -2,6 +2,7 @@
 desktop_packages: []
 desktop_dev_packages: []
 include_desktop_dev_packages: false
+include_vscodium: false
 hypervisor: "none" # optional: "kvm", "virtualbox"
 virtualbox_package_name: "virtualbox-7.1"
 include_chrome: false
