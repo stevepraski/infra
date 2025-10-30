@@ -11,5 +11,5 @@
 - name: VSCodium stable package
   ansible.builtin.package:
     name: codium
-    update_cache: yes
-    state: latest
+    update_cache: true
+    state: present

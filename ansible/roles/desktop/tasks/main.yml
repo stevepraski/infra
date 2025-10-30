@@ -1,24 +1,27 @@
+---
+# FIXME: split into development desktop role
+
 - name: Desktop packages
   ansible.builtin.package:
     name: "{{ desktop_packages }}"
-    update_cache: yes
-    state: latest
+    update_cache: true
+    state: present
 
 - name: Desktop packages for development
   ansible.builtin.package:
     name: "{{ desktop_dev_packages }}"
     state: present
-  when: include_desktop_dev_packages
+  when: include_desktop_dev_packages | bool
 
 - name: Google Chrome
-  include_tasks: chrome.yml
-  when: include_chrome
+  ansible.builtin.include_tasks: chrome.yml
+  when: include_chrome | bool
 
 - name: VSCodium
-  include_tasks: vscodium.yml
+  ansible.builtin.include_tasks: vscodium.yml
   when:
-    - include_desktop_dev_packages
-    - include_vscodium
+    - include_desktop_dev_packages | bool
+    - include_vscodium | bool
 
 - name: KVM packages
   ansible.builtin.package:
@@ -29,8 +32,8 @@
   when:
     - hypervisor == "kvm"
 
-- name: Add user "{{ dev_user }}" to libvirt group
-  user:
+- name: Add user to libvirt group ({{ dev_user }})
+  ansible.builtin.user:
     name: "{{ dev_user }}"
     groups: libvirt
     append: true
@@ -54,9 +57,15 @@
 - name: VirtualBox package
   ansible.builtin.package:
     name: "{{ virtualbox_package_name }}"
-    update_cache: yes
-    state: latest
+    update_cache: true
+    state: present
   when:
     - hypervisor == "virtualbox"
     - ansible_distribution | lower == "debian"
     - ansible_distribution_major_version == "12"
+
+- name: Docker Desktop
+  ansible.builtin.include_tasks: docker_desktop.yml
+
+- name: Vagrant
+  ansible.builtin.include_tasks: vagrant.yml

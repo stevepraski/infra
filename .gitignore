@@ -52,3 +52,7 @@ Vagrantfile
 ### Temporary (until I vault them, and/or make a submodule) ###
 group_vars
 inventory
+
+### Ansible / VSCodium
+.ansible
+.vscode

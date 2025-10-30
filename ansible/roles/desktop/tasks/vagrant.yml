@@ -1,0 +1,33 @@
+---
+- name: Vagrant repository source
+  ansible.builtin.deb822_repository:
+    name: vagrant
+    types: deb
+    uris: https://apt.releases.hashicorp.com
+    suites: "{{ ansible_distribution_release }}"
+    components: main
+    signed_by: https://apt.releases.hashicorp.com/gpg
+  when:
+    - ansible_distribution | lower == "debian"
+    - ansible_distribution_major_version == "13"
+    - hypervisor == "kvm" or hypervisor == "virtualbox"
+
+- name: Vagrant package
+  ansible.builtin.package:
+    name: vagrant
+    update_cache: true
+    state: present
+  when:
+    - ansible_distribution | lower == "debian"
+    - ansible_distribution_major_version == "13"
+    - hypervisor == "kvm" or hypervisor == "virtualbox"
+
+- name: Vagrant plugin dependencies libvirt-dev
+  ansible.builtin.package:
+    name: libvirt-dev
+    update_cache: true
+    state: present
+  when:
+    - ansible_distribution | lower == "debian"
+    - ansible_distribution_major_version == "13"
+    - hypervisor == "kvm" or hypervisor == "virtualbox"
