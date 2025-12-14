@@ -66,6 +66,10 @@
 
 - name: Docker Desktop
   ansible.builtin.include_tasks: docker_desktop.yml
+  when:
+    - include_docker_desktop | bool
 
 - name: Vagrant
   ansible.builtin.include_tasks: vagrant.yml
+  when:
+    - include_vagrant | bool

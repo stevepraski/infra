@@ -6,3 +6,5 @@ include_vscodium: false
 hypervisor: "none" # optional: "kvm", "virtualbox"
 virtualbox_package_name: "virtualbox-7.1"
 include_chrome: false
+include_docker_desktop: false
+include_vagrant: false

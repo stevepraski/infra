@@ -13,7 +13,7 @@
     uris: http://dl.google.com/linux/chrome/deb/
     suites: stable
     components: main
-    signed_by: /etc/apt/trusted.gpg.d/google-chrome.gpg
+    signed_by: /etc/apt/trusted.gpg.d/google.asc
 
 - name: Google Chrome stable package
   ansible.builtin.package:
