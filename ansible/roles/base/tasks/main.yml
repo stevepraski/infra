@@ -1,5 +1,22 @@
 ---
+- name: Add i386 Architecture
+  when:
+    - base_add_i386_architecture | bool
+    - ansible_os_family == "Debian"
+    - ansible_architecture == "x86_64"
+  block:
+    - name: Check if i386 architecture is already enabled
+      ansible.builtin.command: dpkg --print-foreign-architectures
+      register: base_foreign_archs
+      changed_when: false
+
+    - name: Enable i386 architecture
+      ansible.builtin.command: dpkg --add-architecture i386
+      when: "'i386' not in base_foreign_archs.stdout"
+      changed_when: "'i386' not in base_foreign_archs.stdout"
+      notify: Update apt cache
+
 - name: Utility packages
-  package:
+  ansible.builtin.package:
     name: "{{ base_utility_packages }}"
-    state: latest
+    state: present

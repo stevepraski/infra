@@ -3,24 +3,19 @@
   become: true
 
   tasks:
-  - name: Security
-    include_role:
-      name: security
+    - name: Security
+      include_role:
+        name: security
 
-  - name: Base
-    include_role:
-      name: base
+    - name: Base
+      include_role:
+        name: base
 
-  - name: Desktop
-    include_role:
-      name: desktop
+    - name: Desktop
+      include_role:
+        name: desktop
 
-  - name: Steam installer
-    include_role:
-      name: steam
-    when: include_steam | default(false) | bool
-
-  - name: Data role
-    include_role:
-      name: data
-    when: include_data_role | default(false) | bool
+    - name: Data role
+      include_role:
+        name: data
+      when: include_data_role | default(false) | bool

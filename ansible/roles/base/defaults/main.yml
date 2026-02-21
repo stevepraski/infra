@@ -3,3 +3,4 @@ base_utility_packages:
   - tmux
   - htop
   - rsync
+base_add_i386_architecture: false
