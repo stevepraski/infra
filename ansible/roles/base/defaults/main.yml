@@ -4,3 +4,4 @@ base_utility_packages:
   - htop
   - rsync
 base_add_i386_architecture: false
+base_absent_packages: ""

@@ -1,0 +1,41 @@
+---
+- name: Obsidian - Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Obsidian - Install package
+  when:
+    - ansible_os_family == "Debian"
+    - "'obsidian' not in ansible_facts.packages"
+  block:
+    - name: Obsidian - Get latest release metadata from GitHub API
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/{{ desktop_obsidian_repo_owner }}/{{ desktop_obsidian_repo_name }}/releases/latest"
+        return_content: true
+      register: desktop_obsidian_github_release
+
+    - name: Obsidian - Filter for the specific asset URL
+      ansible.builtin.set_fact:
+        desktop_obsidian_download_url: "{{ desktop_obsidian_github_release.json.assets | json_query(extension_query) }}"
+      vars:
+        extension_query: "[?ends_with(name, '{{ desktop_obsidian_extension }}')].browser_download_url | [0]"
+
+    - name: Obsidian - Download binary to Control Node
+      delegate_to: localhost
+      become: false
+      ansible.builtin.get_url:
+        url: "{{ desktop_obsidian_download_url }}"
+        dest: "./files/"
+        mode: "0644"
+      register: desktop_obsidian_download_result
+
+    - name: Obsidian - Distribute to nodes
+      ansible.builtin.copy:
+        src: "{{ desktop_obsidian_download_result.dest }}"
+        dest: "/tmp/{{ desktop_obsidian_download_result.dest | basename }}"
+        mode: "0644"
+
+    - name: Obsidian - Install the package
+      ansible.builtin.apt:
+        deb: "/tmp/{{ desktop_obsidian_download_result.dest | basename }}"
+        state: present

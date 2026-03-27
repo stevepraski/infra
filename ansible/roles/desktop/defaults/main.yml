@@ -8,3 +8,7 @@ virtualbox_package_name: "virtualbox-7.1"
 include_chrome: false
 include_docker_desktop: false
 include_vagrant: false
+desktop_include_obsidian: false
+desktop_obsidian_repo_owner: "obsidianmd"
+desktop_obsidian_repo_name: "obsidian-releases"
+desktop_obsidian_extension: ".deb"

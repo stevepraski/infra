@@ -56,3 +56,6 @@ inventory
 ### Ansible / VSCodium
 .ansible
 .vscode
+
+### Binary files ###
+ansible/files

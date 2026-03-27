@@ -73,3 +73,8 @@
   ansible.builtin.include_tasks: vagrant.yml
   when:
     - include_vagrant | bool
+
+- name: Obsidian
+  ansible.builtin.include_tasks: obsidian.yml
+  when:
+    - desktop_include_obsidian | bool

@@ -5,7 +5,14 @@ Infrastructure as code (IaC) for my personal infrastructure.
 The contents of this repo are not recommended for use by anyone, since it is opinionated, minimally viable, may omit or assume additional undocumented and manual security configuration, and is specific to the hardware and services that I own and manage.  This repo is also very much a work in progress and subject to breaking changes and refactoring, although presumptively not so much that I break my own services.  That said, this repo may be useful as a reference for those wanting to manage their own home lab.
 
 ## Requirements
-For local machines, install the latest Debian stable distribution (e.g. Debian 12 "Bookworm", at the time of this writing) using expert mode, and following best practices, with one non-root administration user.
+For local machines, install the latest Debian stable distribution (e.g. Debian 13 "Trixie", at the time of this writing) using expert mode, and following best practices, with one non-root administration user.
+
+### Ensure jmespath is installed
+For example:
+```
+pipx install jmespath
+pipx inject ansible jmespath
+```
 
 ### Manually preparing local target hosts
 1. Add management SSH key(s) to the authorized_keys file of the sudo administration user that was added during operating system installation, by logging in with that user
